@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const PORT = 3005;
+const PORT = 3007;
 const scrapearNoticias = require('./scraping');  
 
 app.use(express.json());
