@@ -1,29 +1,27 @@
 const express = require('express');
 const fs = require('fs');
+const scrapearNoticias = require('./scraping');
 const app = express();
 const PORT = 3007;
-const scrapearNoticias = require('./scraping');  
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 let noticias = [];
 
-
 app.get('/', (req, res) => {
   res.send('Bienvenido a la API de Noticias');
 });
 
-
-app.get('/scraping', (req, res) => {
-  scrapearNoticias();  
+app.get('/scraping', async (req, res) => {
+  await scrapearNoticias(); 
+  leerDatos(); 
   res.send('Scraping en curso... las noticias se han guardado en noticias.json');
 });
 
-
 app.get('/noticias', (req, res) => {
-  leerDatos();
-  res.json(noticias);
+  leerDatos(); 
+  res.json(noticias); 
 });
 
 app.post('/noticias', (req, res) => {
