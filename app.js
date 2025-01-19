@@ -5,21 +5,23 @@ const PORT = 3005;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 let noticias = [];
 
+// Ruta para la raíz
+app.get('/', (req, res) => {
+  res.send('Bienvenido a la API de Noticias');
+});
 
+// Rutas para las noticias
 app.get('/noticias', (req, res) => {
   res.json(noticias);
 });
-
 
 app.post('/noticias', (req, res) => {
   const nuevaNoticia = req.body;
   noticias.push(nuevaNoticia);
   res.status(201).json({ mensaje: 'Noticia creada', noticia: nuevaNoticia });
 });
-
 
 app.put('/noticias/:indice', (req, res) => {
   const indice = parseInt(req.params.indice);
@@ -31,7 +33,6 @@ app.put('/noticias/:indice', (req, res) => {
     res.status(404).json({ mensaje: 'Noticia no encontrada' });
   }
 });
-
 
 app.delete('/noticias/:indice', (req, res) => {
   const indice = parseInt(req.params.indice);
@@ -47,4 +48,3 @@ app.delete('/noticias/:indice', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-
