@@ -1,6 +1,5 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const fs = require('fs');
 
 const url = 'https://elpais.com/ultimas-noticias/';
 
@@ -10,7 +9,7 @@ async function scrape() {
     const $ = cheerio.load(response.data);
     const noticias = [];
 
-    
+  
     $('article').each((index, element) => {
       const titulo = $(element).find('h2').text().trim();
       const descripcion = $(element).find('p').text().trim();
@@ -28,14 +27,15 @@ async function scrape() {
       }
     });
 
-   
-    fs.writeFileSync('noticias.json', JSON.stringify(noticias, null, 2));
 
-    console.log('Scraping completado y datos guardados en noticias.json');
+    console.log('Noticias obtenidas:', noticias);
+    
+   
+    return noticias;
+
   } catch (error) {
     console.error('Error durante el scraping:', error.message);
   }
 }
 
 scrape();
-
