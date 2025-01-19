@@ -1,41 +1,41 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const fs = require('fs');
 
 const url = 'https://elpais.com/ultimas-noticias/';
 
-async function scrape() {
+async function scrapearNoticias() {
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
-    const noticias = [];
-
-  
-    $('article').each((index, element) => {
-      const titulo = $(element).find('h2').text().trim();
-      const descripcion = $(element).find('p').text().trim();
+    
+    let noticias = [];
+    
+    $('.listado-noticias .item').each((index, element) => {
+      const titulo = $(element).find('.titular').text().trim();
+      const descripcion = $(element).find('.sumario').text().trim();
       const enlace = $(element).find('a').attr('href');
       const imagen = $(element).find('img').attr('src');
-
-      if (titulo && descripcion && enlace && imagen) {
-        const noticia = {
-          titulo: titulo,
-          descripcion: descripcion,
-          enlace: enlace,
-          imagen: imagen
-        };
-        noticias.push(noticia);
-      }
+      
+      const noticia = {
+        titulo,
+        descripcion,
+        enlace,
+        imagen
+      };
+      
+      noticias.push(noticia);
     });
-
-
-    console.log('Noticias obtenidas:', noticias);
     
-   
-    return noticias;
-
+    // Guardar los datos en noticias.json
+    fs.writeFileSync('noticias.json', JSON.stringify(noticias, null, 2));
+    console.log('Noticias escrapeadas y guardadas en noticias.json');
   } catch (error) {
-    console.error('Error durante el scraping:', error.message);
+    console.error('Error en el scraping:', error.message);
   }
 }
 
-scrape();
+// No se llama aquí la función, solo se exporta
+module.exports = scrapearNoticias;
+
+
